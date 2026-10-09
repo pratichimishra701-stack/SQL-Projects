@@ -1,0 +1,139 @@
+use food
+select * from ifood_df
+
+--DATA CLEANING
+SELECT
+SUM(CASE when income is null then 1 else 0 end) as income_missing,
+SUM(CASE when MntFishProducts is null then 1 else 0 end) as MntFishProducts_missing,
+SUM(CASE when MntMeatProducts is null then 1 else 0 end) as  MntMeatProducts_missing,
+SUM(CASE when MntSweetProducts is null then 1 else 0 end) as  MntSweetProducts_missing,
+SUM(CASE when NumWebPurchases is null then 1 else 0 end) as  NumWebPurchases_missing,
+SUM(CASE when NumStorePurchases is null then 1 else 0 end) as  NumStorePurchases_missing
+FROM ifood_df;
+
+--CHECK STATEMENT
+SELECT Income,MntFishProducts,MntGoldProds,MntMeatProducts FROM ifood_df
+ORDER BY Income desc;
+
+--AGGREGATE FUNCTION(SUM,AVG.MAX.MIN,COUNT)
+SELECT Income,
+count(*) AS total_count,
+SUM( Income) as total_Income,
+AVG( Income) as avg_Income,
+MAX( Income) as max_Income,
+MIN( Income) as min_Income
+FROM ifood_df
+GROUP BY  income;
+
+--show top 10 data
+SELECT top 10 * FROM ifood_df;
+
+--GROUP BY + ORDER BY
+SELECT SUM(Recency) as recency_amount,
+COUNT(*) AS total_transactions FROM ifood_df
+ GROUP BY Recency
+ORDER BY recency_amount;
+
+--HAVING
+--Find income where MntWines > 600.
+SELECT income,
+SUM(MntWines) as Wines, 
+COUNT(*) as total_count FROM ifood_df
+GROUP BY Income
+HAVING sum(MntWines) >600
+ORDER BY Wines desc;
+
+select * from ifood_df;
+
+--CHECK STATEMENT
+SELECT income,Customer_Days FROM ifood_df ORDER BY Income desc;
+
+--Subquery with IN
+SELECT * FROM ifood_df
+WHERE NumWebPurchases IN (SELECT DISTINCT NumWebPurchases FROM ifood_df
+WHERE Age =60)
+ORDER BY NumWebPurchases;
+
+--DISTINCT (subquery)
+SELECT DISTINCT Customer_Days FROM ifood_df where Customer_Days not IN (
+SELECT DISTINCT Customer_Days FROM ifood_df  WHERE marital_Together =1
+);
+
+-- WINDOW FUNCTION
+--PARTITION BY
+--SUM,AVG,COUNT,MAX,MIN
+SELECT top 10 MntFruits,MntFishProducts,
+SUM(MntFishProducts) OVER(PARTITION BY MntFruits ) as total_subscribers,
+AVG(MntFishProducts) OVER(PARTITION BY MntFruits) as avg_subscribers,
+MAX(MntFishProducts) OVER(PARTITION BY MntFruits) as max_subscribers,
+MIN(MntFishProducts) OVER(PARTITION BY MntFruits) as min_subscribers,
+COUNT(*) OVER(PARTITION BY MntFruits) as count_subscribers
+FROM ifood_df
+ORDER BY MntFishProducts desc;
+
+--ROW_NUMBER()
+SELECT MntTotal,Age,ROW_NUMBER() OVER(ORDER BY MntTotal desc) as row_num
+FROM ifood_df;
+
+--RANK()
+SELECT MntTotal,Age,RANK() OVER(ORDER BY MntTotal desc) as row_num
+FROM ifood_df;
+
+--LAG()
+-- Access of previous row 
+SELECT Age,MntTotal,
+LAG(MntTotal) OVER(ORDER BY age) as previous_row_age
+FROM ifood_df;
+
+--LEAD()
+--Access to the next row
+SELECT Age,MntTotal,
+LEAD(MntTotal) OVER(ORDER BY age) as next_row_age
+FROM ifood_df;
+
+select * from ifood_df;
+
+-- roll back 
+begin transaction; 
+delete from ifood_df where Age=25;
+select * from ifood_df;
+rollback;
+
+-- commit 
+begin transaction;
+update ifood_df set Income=14000 where MntFishProducts=108;
+select * from ifood_df;
+commit;
+
+--VIEW(to save the data)
+CREATE VIEW high_rated_courses AS 
+SELECT * 
+FROM ifood_df 
+WHERE Recency > 50;
+SELECT * FROM high_rated_courses WHERE MntGoldProds=5;
+
+--VIEW WITH Aggerage + GROUP BY + ORDER BY
+create view market_summary as
+SELECT Customer_Days,
+SUM(MntTotal) as total_MntTotal,
+AVG(MntTotal) as avg_MntTotal,
+MAX(MntTotal) as max_MntTotal,
+COUNT(*) as total_count
+FROM ifood_df 
+GROUP BY Customer_Days;
+
+SELECT * FROM market_summary ORDER BY total_MntTotal desc;
+
+--INDEXING
+CREATE INDEX idx_cat ON ifood_df (kidhome);
+
+SELECT top 10 * FROM ifood_df  WHERE Kidhome = 0;
+
+--CTE(comman table express)
+--it is a temproary named table result that set  makes complicated query easy to read
+WITH id_total as(
+SELECT  top 3 MntSweetProducts, SUM(MntTotal) as total FROM ifood_df
+WHERE NumDealsPurchases =1 
+GROUP BY MntSweetProducts)
+SELECT MntSweetProducts, total FROM id_total
+ORDER BY total desc;
