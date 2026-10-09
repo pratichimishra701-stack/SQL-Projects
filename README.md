@@ -75,3 +75,49 @@ SQL is used to clean, transform, and analyze the dataset. The project includes:
 The main objective of this project is to explore Udemy Finance and Accounting courses and understand patterns related to course popularity, ratings, reviews, subscribers, pricing, and course content.
 
 This project demonstrates practical SQL skills in data cleaning, data transformation, exploratory data analysis, aggregation, subqueries, window functions, views, indexing, and CTEs.
+
+# iFood Customer Purchase and Marketing Analysis Using SQL
+
+## Project Overview
+
+This project focuses on analyzing customer purchasing behavior and product spending using SQL. The dataset contains customer demographics, income information, purchasing patterns, product spending, and shopping channel activity. SQL queries are used to explore customer data, identify spending patterns, and understand customer purchasing behavior.
+
+## Dataset Description
+
+The dataset includes information about:
+
+* **Customer Demographics:** Age, income, marital status, and household information.
+* **Product Spending:** Customer spending on wines, fruits, fish, meat, sweets, and gold products.
+* **Purchase Behavior:** Number of web purchases, store purchases, and purchases made using deals.
+* **Customer Activity:** Recency and customer-related duration information.
+* **Household Details:** Number of children and teenagers at home.
+
+## SQL Analysis Performed
+
+* Data cleaning and missing-value checks
+* Data filtering and sorting
+* Aggregate functions such as SUM, AVG, COUNT, MAX, and MIN
+* GROUP BY and HAVING clauses
+* Subqueries and DISTINCT
+* Window functions, including ROW_NUMBER, RANK, LAG, and LEAD
+* SQL transactions using COMMIT and ROLLBACK
+* Creating views for reusable analysis
+* Indexing for query performance
+* Common Table Expressions (CTEs)
+
+## Project Objectives
+
+* Analyze customer spending across different product categories.
+* Explore relationships between customer income and purchasing behavior.
+* Examine shopping activity across web and physical store channels.
+* Summarize customer purchasing patterns using aggregate functions.
+* Apply SQL techniques to clean, organize, and analyze customer data.
+
+## Tools Used
+
+* SQL
+* Relational database management system
+
+## Key Skills Demonstrated
+
+SQL querying, data cleaning, exploratory data analysis, aggregation, subqueries, window functions, transaction management, views, indexing, and CTEs.
